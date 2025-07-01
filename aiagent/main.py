@@ -1,0 +1,47 @@
+import getpass
+import os, logging
+from fastapi import FastAPI
+from contextlib import asynccontextmanager
+from langchain_core.messages import HumanMessage, SystemMessage
+
+from aiagent.config.logging_config import initialize_logger
+
+initialize_logger()
+
+logger = logging.getLogger(__name__)
+logger.info("aiagent service initializing")
+
+if not os.environ.get("GOOGLE_API_KEY"):
+  os.environ["GOOGLE_API_KEY"] = getpass.getpass("Enter API key for Google Gemini: ")
+
+from langchain.chat_models import init_chat_model
+
+model = init_chat_model("gemini-2.0-flash", model_provider="google_genai")
+
+model.invoke("Hello, world!")
+
+messages = [
+    SystemMessage("You are a translation engine. Only respond with the Tamil translation of the input. Do not add any explanation or commentary."),
+    HumanMessage("Good Morning!"),
+]
+
+for token in model.stream(messages):
+    print(token.content, end="|")
+    
+    
+async def on_startup():
+    logger.info("running startup tasks")
+    
+async def on_shutdown():
+    logger.info("shutting down\n\n")
+ 
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    await on_startup()
+    try:
+        yield
+    finally:
+        await on_shutdown()
+    
+
+app = FastAPI(lifespan=lifespan, title="Ai Agent Service")
