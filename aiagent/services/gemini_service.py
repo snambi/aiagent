@@ -1,11 +1,12 @@
 import logging, os, getpass
 
 from langchain.chat_models import init_chat_model
+from langchain_core.messages import HumanMessage, SystemMessage
 
 logger = logging.getLogger(__name__)
 
 """
-    
+
 """
 class GeminiService:
     
@@ -24,5 +25,20 @@ class GeminiService:
         
   
     
-    def stream(self, input:str):
+    def invoke(self, input:str) -> str :
+        output = self.model.invoke("Hello, world!")
         
+        logger.debug("input: {input} , output: {output.content} ")
+        
+        return output.content
+    
+    def translateTo(self, input:str, language:str ) -> str:
+        
+        messages = [
+                    SystemMessage("You are a translation engine. Only respond with the Tamil translation of the input. Do not add any explanation or commentary."),
+                    HumanMessage("Good Morning!"),
+                ]
+
+        output = self.model.invoke(messages)
+        
+        return output.content

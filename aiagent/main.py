@@ -5,6 +5,7 @@ from contextlib import asynccontextmanager
 from langchain_core.messages import HumanMessage, SystemMessage
 
 from aiagent.config.logging_config import initialize_logger
+from aiagent.routers.gemini_router import gemini_router
 
 initialize_logger()
 
@@ -45,3 +46,5 @@ async def lifespan(app: FastAPI):
     
 
 app = FastAPI(lifespan=lifespan, title="Ai Agent Service")
+
+app.include_router(gemini_router)
