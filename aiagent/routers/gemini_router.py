@@ -3,6 +3,7 @@ import logging
 from fastapi import APIRouter, Depends
 from aiagent.controllers.gemini_controller import GeminiController
 from aiagent.services.gemini_service import GeminiService
+from pydantic import BaseModel
 
 logger = logging.getLogger(__name__)
 
@@ -12,8 +13,10 @@ gemini_router = APIRouter(prefix="/gemini", tags=["translate"],
 
 gemini_controller:GeminiController = None
 
+
 def get_gemini_service():
     return GeminiService()
+
 
 def get_gemini_controller(service:GeminiService = Depends(get_gemini_service) ):
     global gemini_controller
@@ -21,6 +24,7 @@ def get_gemini_controller(service:GeminiService = Depends(get_gemini_service) ):
         gemini_controller = GeminiController(service)
         
     return gemini_controller
+
 
 @gemini_router.post("/translate", response_model=str )
 async def translate_to(controller:GeminiController = Depends(get_gemini_controller) ):
