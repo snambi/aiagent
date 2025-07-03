@@ -35,8 +35,8 @@ class GeminiService:
     def translateTo(self, input:str, language:str ) -> str:
         
         messages = [
-                    SystemMessage("You are a translation engine. Only respond with the Tamil translation of the input. Do not add any explanation or commentary."),
-                    HumanMessage("Good Morning!"),
+                    SystemMessage(f"You are a translation engine. Only respond with the {language} translation of the input. Do not add any explanation or commentary."),
+                    HumanMessage(input),
                 ]
 
         output = self.model.invoke(messages)

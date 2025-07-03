@@ -1,13 +1,15 @@
 import logging
 
 from fastapi import APIRouter, Depends
+
 from aiagent.controllers.gemini_controller import GeminiController
 from aiagent.services.gemini_service import GeminiService
-from pydantic import BaseModel
+from aiagent.models.gemini_input import TranslationRequest
 
 logger = logging.getLogger(__name__)
 
-gemini_router = APIRouter(prefix="/gemini", tags=["translate"], 
+gemini_router = APIRouter(prefix="/gemini", 
+                          tags=["translate"], 
                           responses={404:{"description": "Not Found"}}
                           )
 
@@ -27,6 +29,6 @@ def get_gemini_controller(service:GeminiService = Depends(get_gemini_service) ):
 
 
 @gemini_router.post("/translate", response_model=str )
-async def translate_to(controller:GeminiController = Depends(get_gemini_controller) ):
-    return controller.translate_to("eeee", "french")
+async def translate_to( request:TranslationRequest, controller:GeminiController = Depends(get_gemini_controller) ):
+    return controller.translate_to(request.text, request.language)
 
