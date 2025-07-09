@@ -35,10 +35,6 @@ async def translate_to( request:TranslationRequest, controller:GeminiController 
 
 @gemini_router.post("/translate/stream")
 async def translate_to_instream( request:TranslationRequest, service:GeminiService = Depends(get_gemini_service)) :
-    
-    # async def stream():
-    #     async for chunk in service.translateToInStream(request.text, request.language):
-    #         yield chunk.encode("utf-8")
             
     return StreamingResponse(content = service.translateToInStream(request.text, request.language), 
                              media_type="text/plain", )

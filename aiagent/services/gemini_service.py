@@ -47,7 +47,7 @@ class GeminiService:
 
     async def translateToInStream(self, input:str, language:str) -> AsyncGenerator[str, None]:
         
-        logger.info(f"translate {input} to {language}")
+        logger.debug(f"translate {input} to {language}")
         
         messages = [
             SystemMessage(f"You are a translation engine. Only respond with the {language} translation of the input. Do not add any explanation or commentary."),
