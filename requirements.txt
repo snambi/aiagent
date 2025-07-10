@@ -11,4 +11,5 @@ faiss-cpu
 sentence-transformers 
 tiktoken
 requests
+serpapi
 pytest
